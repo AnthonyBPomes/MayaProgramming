@@ -10,11 +10,15 @@ def gen():
     x = 0
     nodeList = []
 
-    while i < 3:
+    while i < 11:
         cmd.polySphere(n='node' + str(i))
         nodeList.append('node' + str(i))
-        cmd.move(x)
-        x = x - 3
+        #cmd.move(x)
+        #x = x - 3
+        x = rand.uniform(-10,10)
+        y = rand.uniform(9-i*2,10-i*2)
+        z = rand.uniform(-10,10)
+        cmd.move(x,y,z)
         i = i + 1
 
     cmd.select(all=True)
