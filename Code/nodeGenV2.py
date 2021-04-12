@@ -2,7 +2,7 @@ import maya.cmds as cmd
 import maya.mel as mel
 import random as rand
 
-# FACES 168 TO 179 + 424 PER NODE
+# FACES 0 TO 340 + 424 PER NODE
 
 def gen():
     
@@ -10,22 +10,28 @@ def gen():
     x = 0
     nodeList = []
 
-    while i < 5:
+    while i < 3:
         cmd.polySphere(n='node' + str(i))
         nodeList.append('node' + str(i))
         cmd.move(x)
         x = x - 3
         i = i + 1
 
-    connectNodes(iter(nodeList))
+    cmd.select(all=True)
+    cmd.polyUnite(n='nodesCombined')
+    connectNodes(nodeList)
 
 def connectNodes(nodeList):
-    print(nodeList)
-    #print(next(nodeList))
-    cmd.select('node0', 'node1')
-    cmd.polyUnite(n='first')
-    cmd.select('first.f[150]', 'first.f[574]')
-    mel.eval('polyBridgeFaces')
-    mel.eval('setAttr "polyBridgeEdge1.divisions" 5')
-    mel.eval('setAttr "polyBridgeEdge1.targetDirection" 0')
-    mel.eval('setAttr "polyBridgeEdge1.sourceDirection" 0')
+    j = 0
+    bottomFace = 0
+    topFace = 740
+    while j < len(nodeList) - 1:
+        print(nodeList[j])
+        cmd.select('nodesCombined.f[{}]'.format(bottomFace), 'nodesCombined.f[{}]'.format(topFace))
+        mel.eval('polyBridgeFaces')
+        mel.eval('setAttr "polyBridgeEdge{}.divisions" 5'.format(j+1))
+        mel.eval('setAttr "polyBridgeEdge{}.targetDirection" 0'.format(j+1))
+        mel.eval('setAttr "polyBridgeEdge{}.sourceDirection" 0'.format(j+1))
+        j = j + 1
+        bottomFace = bottomFace + 400
+        topFace = topFace + 400
