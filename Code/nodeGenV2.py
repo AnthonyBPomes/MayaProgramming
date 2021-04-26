@@ -4,20 +4,21 @@ import random as rand
 
 # FACES 0 TO 340 + 424 PER NODE
 
-def gen():
+def gen(numberOfNodes):
     
     i = 0
     x = 0
     nodeList = []
 
-    while i < 11:
+    while i < numberOfNodes:
         cmd.polySphere(n='node' + str(i))
         nodeList.append('node' + str(i))
         #cmd.move(x)
         #x = x - 3
         x = rand.uniform(-10,10)
-        y = rand.uniform(9-i*2,10-i*2)
+        y = rand.uniform(-10,10)
         z = rand.uniform(-10,10)
+        #mel.eval('sets -e -forceElement standardSurface{}SG'.format(rand.randint(2,5)))
         cmd.move(x,y,z)
         i = i + 1
 
@@ -36,6 +37,9 @@ def connectNodes(nodeList):
         mel.eval('setAttr "polyBridgeEdge{}.divisions" 5'.format(j+1))
         mel.eval('setAttr "polyBridgeEdge{}.targetDirection" 0'.format(j+1))
         mel.eval('setAttr "polyBridgeEdge{}.sourceDirection" 0'.format(j+1))
+        if j == 0:
+            bottomFace = bottomFace + 399
+        else:
+            bottomFace = bottomFace + 398
+        topFace = topFace + 398
         j = j + 1
-        bottomFace = bottomFace + 400
-        topFace = topFace + 400
